@@ -4,6 +4,29 @@ import { useEffect, useState } from 'react';
 import { HelixClip, ApiClient, HelixVideo } from '@twurple/api';
 import { IconArrowBack } from '@tabler/icons-react';
 
+function formatViewCount(views: number) {
+  if (views >= 1e6) {
+      return (views / 1e6).toFixed(1) + 'M';
+  } else if (views >= 1e3) {
+      return (views / 1e3).toFixed(1) + 'K';
+  } else {
+      return views.toString();
+  }
+}
+
+function getColor(views: number) {
+  if (views >= 1e5) {
+    return 'pink'
+  } else if (views >= 1e4) {
+    return 'grape';
+  } else if (views >= 1e3) {
+    return 'indigo';
+  } else if (views >= 1e2) {
+    return 'teal';
+  }
+  return '';
+}
+
 export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixVideo, unselectVideo: () => void, selectClip: (clip: HelixClip) => void }) {
   const [clips, setClips ] = useState<HelixClip[]>([])
   const [isLoading, setLoading] = useState(true)
@@ -49,14 +72,14 @@ export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixV
           <Timeline.Item key={key} title={`Minute ${key}`} c="dimmed" bullet={data[key].length > 1 ? data[key].length : ' '}>
             {data[key].map((clip, index) => (
               <>
-                <Card key={index} padding="sm" component="a" onClick={() => {
+                <Card key={index} padding="sm" bg={getColor(clip.views)} component="a" href="#" onClick={() => {
                   props.selectClip(clip);
                 }}>
                 
-                  <Text fw={50} size="m" c="cyan" lineClamp={1}>{clip.title}</Text>
+                  <Text fw={600} size="m" c="cyan" lineClamp={1}>{clip.title}</Text>
 
                   <Group justify="space-between">
-                    <Text size="xs" c="orange" mt={4}>{clip.creatorDisplayName} - {Math.floor(clip.duration).toString()}s</Text>
+                    <Text size="xs" c="orange" mt={4}>{clip.creatorDisplayName} - {formatViewCount(clip.views)} Views</Text>
                   </Group>
                 </Card>
                 <Space h="md" />

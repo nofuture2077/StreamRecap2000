@@ -35,12 +35,12 @@ export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: 
     <>
       <Timeline bulletSize={24} lineWidth={2} align="left">
         {videos.map((video) => (
-          <Timeline.Item key={video.id} title={formatDate(video.creationDate)} c="dimmed" component="a" onClick={() => {
-            props.selectVideo(video);
-          }}>
+          <Timeline.Item key={video.id} title={formatDate(video.creationDate)} c="dimmed">
               <>
-                <Card key={video.id} padding="sm">
-                <Text fw={50} size="m" c="cyan" lineClamp={1}>{video.title}</Text>
+                <Card key={video.id} padding="sm" component="a" href="#" onClick={() => {
+                  props.selectVideo(video);
+                }}>
+                <Text fw={600} size="m" c="cyan" lineClamp={1}>{video.title}</Text>
                   <Text fw={50} size="s" c="orange" lineClamp={1}>{video.userDisplayName}</Text>
                 </Card>
                 <Space h="md" />

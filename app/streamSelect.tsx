@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { Timeline, Text, Card, Space,  } from '@mantine/core';
+import { Timeline, Text, Card, Space, Select } from '@mantine/core';
 import { ApiClient, HelixVideo } from '@twurple/api';
 import { useEffect, useState } from 'react';
 
@@ -16,23 +16,37 @@ function formatDate(date: Date): string {
   }
   return day + '.' + month + '.' + year;
 }
-export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: (video: HelixVideo) => void}) {
+export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: (video: HelixVideo) => void, channelId: number, setChannelId: (channelId:number) => void}) {
   const [videos, setVideos] = useState<HelixVideo[]>([]);
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    props.apiClient.videos.getVideosByUser(531019578, {
+    console.log('ChannelId: ' + props.channelId);
+    props.apiClient.videos.getVideosByUser(props.channelId, {
 
     }).then((videos) => {
       setVideos(videos.data)
       setLoading(false)
     });
-  }, [props.apiClient.videos]);
+  }, [props.apiClient.videos, props.channelId]);
   
   if (isLoading) return <p>Loading...</p>
   if (!videos.length) return <p>No streams</p>
 
   return (
     <>
+      <Select
+        data={[
+          { value: '531019578', label: 'ronnyberger' },
+          { value: '451635946', label: 'daefoxi' },
+          { value: '427135151', label: 'einsebastian' },
+          { value: '529112648', label: 'knirpz' },
+          { value: '147118536', label: 'zeusspezial' },
+          { value: '90631404', label: 'mystery_blue' },
+        ]}
+        value={props.channelId.toString()}
+        onChange={(_value, option) => props.setChannelId(parseInt(option.value))}
+      />
+      <Space h="lg"/>
       <Timeline bulletSize={24} lineWidth={2} align="left">
         {videos.map((video) => (
           <Timeline.Item key={video.id} title={formatDate(video.creationDate)} c="dimmed">

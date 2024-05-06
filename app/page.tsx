@@ -37,6 +37,7 @@ export default function TwitchRecap() {
   const [accessToken, setAccessToken] = useState("")
   const [video, setVideo] = useState<HelixVideo | null>(null)
   const [clip, setClip] = useState<HelixClip | null>(null)
+  const [channelId, setChannelId] = useState<number>(531019578)
 
   useEffect(() => {
     const accessToken = localStorage.getItem('StreamRecap2000#authToken');
@@ -80,7 +81,7 @@ export default function TwitchRecap() {
         </AppShell.Header>
         <AppShell.Navbar p="md" >
           <ScrollArea>
-            {video ? <ClipTimeline apiClient={apiClient} unselectVideo={unselectVideo} selectClip={selectClip} video={video}/> : <StreamSelect apiClient={apiClient} selectVideo={selectVideo}/>}
+            {video ? <ClipTimeline apiClient={apiClient} unselectVideo={unselectVideo} selectClip={selectClip} video={video}/> : <StreamSelect apiClient={apiClient} selectVideo={selectVideo} channelId={channelId} setChannelId={setChannelId}/>}
           </ScrollArea>
         </AppShell.Navbar>
         <AppShell.Main>{(video && clip) ? <ClipPlayer clip={clip}/> : ''}</AppShell.Main>

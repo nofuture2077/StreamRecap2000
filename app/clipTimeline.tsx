@@ -50,7 +50,13 @@ export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixV
   }, [props.video.userId, props.video.creationDate, props.video.userId, props.apiClient.clips])
  
   if (isLoading) return <p>Loading...</p>
-  if (!clips.length) return <p>No clips</p>
+  if (!clips.length) return (<>
+      <Button leftSection={<IconArrowBack size={14} />} variant="default" onClick={props.unselectVideo}>
+        Back
+      </Button>
+      <Space h="md"/>
+      <p>No clips</p>
+    </>)
   
   const filtered: HelixClip[] = clips.filter(
     (x) => x.title.indexOf(props.video.title) === -1

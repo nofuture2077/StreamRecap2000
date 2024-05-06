@@ -47,7 +47,7 @@ export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixV
         setClips(clips)
         setLoading(false)
       })
-  }, [props.video.userId, props.video.creationDate, props.video.userId, props.apiClient.clips])
+  }, [props.video.userId, props.video])
  
   if (isLoading) return <p>Loading...</p>
   if (!clips.length) return (<>
@@ -77,8 +77,8 @@ export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixV
         {Object.keys(data).map((key) => (
           <Timeline.Item key={key} title={`Minute ${key}`} c="dimmed" bullet={data[key].length > 1 ? data[key].length : ' '}>
             {data[key].map((clip, index) => (
-              <>
-                <Card key={index} padding="sm" bg={getColor(clip.views)} component="a" href="#" onClick={() => {
+              <div key={clip.id}>
+                <Card key={clip.thumbnailUrl} padding="sm" bg={getColor(clip.views)} component="a" href="#" onClick={() => {
                   props.selectClip(clip);
                 }}>
                 
@@ -89,7 +89,7 @@ export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixV
                   </Group>
                 </Card>
                 <Space h="md" />
-              </>
+              </div>
             ))}
           </Timeline.Item>
         ))}

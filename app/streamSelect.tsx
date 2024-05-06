@@ -31,7 +31,6 @@ export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: 
   const [videos, setVideos] = useState<HelixVideo[]>([]);
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    console.log('ChannelId: ' + props.channelId);
     props.apiClient.videos.getVideosByUser(props.channelId, {
 
     }).then((videos) => {

@@ -16,6 +16,17 @@ function formatDate(date: Date): string {
   }
   return day + '.' + month + '.' + year;
 }
+
+function formatSeconds(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  
+  const paddedHours = hours.toString().padStart(2, '0');
+  const paddedMinutes = minutes.toString().padStart(2, '0');
+  
+  return `${paddedHours}h ${paddedMinutes}m`;
+}
+
 export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: (video: HelixVideo) => void, channelId: number, setChannelId: (channelId:number) => void}) {
   const [videos, setVideos] = useState<HelixVideo[]>([]);
   const [isLoading, setLoading] = useState(true);
@@ -55,7 +66,7 @@ export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: 
                   props.selectVideo(video);
                 }}>
                 <Text fw={600} size="m" c="cyan" lineClamp={1}>{video.title}</Text>
-                  <Text fw={50} size="s" c="orange" lineClamp={1}>{video.userDisplayName}</Text>
+                  <Text fw={50} size="s" c="orange" lineClamp={1}>{video.userDisplayName} - {formatSeconds(video.durationInSeconds)}</Text>
                 </Card>
                 <Space h="md" />
               </>

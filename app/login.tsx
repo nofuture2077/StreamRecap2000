@@ -11,13 +11,14 @@ export default function Login(props: {clientId: String}) {
         const url = window.location.origin + window.location.pathname.replace("index.html", "");
         setRedirectUrl(encodeURI(url));
     }, []);
+
     var state = '';
     let scope = encodeURIComponent([
         'user:read:follows'
     ].join('+'));
     
     let responseType = encodeURIComponent('token');
-    let authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${props.clientId}&redirect_uri=${'https://nofuture2077.github.io/StreamRecap2000/'}&scope=${scope}&state=${state}`;
+    let authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${props.clientId}&redirect_uri=${redirectUrl}&scope=${scope}&state=${state}`;
 
     return (<Button
             component="a"

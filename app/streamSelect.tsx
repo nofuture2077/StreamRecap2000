@@ -59,6 +59,7 @@ export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: 
       <Space h="lg"/>
         {videos.map((video) => (
           <NavLink
+            key={video.id}
             href="#"
             description={video.userDisplayName + " - " + formatSeconds(video.durationInSeconds)}
             label={<Text lineClamp={2}>{video.title}</Text>}

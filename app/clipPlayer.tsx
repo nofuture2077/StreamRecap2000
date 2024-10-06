@@ -1,5 +1,6 @@
 import { HelixClip } from '@twurple/api';
 
 export default function ClipPlayer(props: {clip: HelixClip}) {
-    return (<video id="player" style={{width: '100%'}} controls={true} autoPlay={true} src={props.clip.thumbnailUrl.replaceAll("-preview-480x272.jpg", ".mp4")} ></video>);
+    console.log(props.clip);
+    return (<iframe id="player" width="800" height="600" src={'https://player.twitch.tv/?video=' + props.clip.id + "&parent=" + encodeURI('nofuture2077.github.io')+ "&autoplay=false"} ></iframe>);
 }

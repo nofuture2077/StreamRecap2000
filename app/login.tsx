@@ -17,7 +17,7 @@ export default function Login(props: {clientId: String}) {
     ].join('+'));
     
     let responseType = encodeURIComponent('token');
-    let authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${props.clientId}&redirect_uri=${redirectUrl}&scope=${scope}&state=${state}`;
+    let authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${props.clientId}&redirect_uri=${'https://nofuture2077.github.io/StreamRecap2000/'}&scope=${scope}&state=${state}`;
 
     return (<Button
             component="a"

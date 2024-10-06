@@ -3,11 +3,15 @@
 import { AppShell, Burger, Group, ScrollArea, Text, Title, MantineProvider } from '@mantine/core';
 import ClipTimeline from './clipTimeline';
 import StreamSelect from './streamSelect';
+import StreamerSelect from './streamerSelect';
 import ClipPlayer from './clipPlayer';
+import AllClips from './allclips';
 import Login from './login';
 import { useEffect, useState } from "react"
-import { StaticAuthProvider } from '@twurple/auth';
+import { StaticAuthProvider, AccessTokenMaybeWithUserId } from '@twurple/auth';
 import { HelixVideo, HelixClip, ApiClient } from '@twurple/api';
+import Logo from '../public/logo.svg';
+import Image from 'next/image';
 
 function getQueryVariable(query: String, variable: String) {
   var vars = query.split('&');
@@ -34,7 +38,9 @@ export default function TwitchRecap() {
       }
   }, [token]);
   
-  const [accessToken, setAccessToken] = useState("")
+  const [accessToken, setAccessToken] = useState<string>()
+  const [apiClient, setApiClient] = useState<ApiClient>()
+  const [userId, setUserId] = useState<string>()
   const [video, setVideo] = useState<HelixVideo | null>(null)
   const [clip, setClip] = useState<HelixClip | null>(null)
   const [channelId, setChannelId] = useState<number>(531019578)
@@ -42,17 +48,18 @@ export default function TwitchRecap() {
   useEffect(() => {
     const accessToken = localStorage.getItem('StreamRecap2000#authToken');
     setAccessToken(accessToken || '');
-  }, [])
 
-  if (!accessToken) {
+    const authProvider = new StaticAuthProvider(clientId, accessToken || '');
+    const apiClient = new ApiClient({ authProvider });
+    
+    authProvider.getAnyAccessToken().then((user: AccessTokenMaybeWithUserId) => {
+      setUserId(user.userId);
+      setApiClient(apiClient);
+    });
+  }, [token])
+
+  if (!accessToken || !apiClient) {
     return (<Login clientId={clientId}/>)
-  }
-
-  const authProvider = new StaticAuthProvider(clientId, accessToken);
-  const apiClient = new ApiClient({ authProvider });
-
-  if (!apiClient) {
-    return "";
   }
 
   const selectVideo = (video: HelixVideo) => {
@@ -68,20 +75,25 @@ export default function TwitchRecap() {
     setClip(clip);
   };
 
+  if (!userId) {
+    return "";
+  }
+
+
   return (
     <MantineProvider defaultColorScheme="dark">
       <AppShell
         header={{ height: 60 }}
         navbar={{ width: 300, breakpoint: 'sm' }}
         padding="md"
-        layout="alt"
+        layout="default"
       >
         <AppShell.Header p="lg">
-          <Title order={2}>{video ? video.title : ''}</Title>
+          {video ? <Title order={2}>{video.title}</Title> : (<Image priority src={Logo}alt="Rasselbande Logo" style={{height: "100%", width: "100%"}} />)}
         </AppShell.Header>
-        <AppShell.Navbar p="md" >
+        <AppShell.Navbar>
           <ScrollArea>
-            {video ? <ClipTimeline apiClient={apiClient} unselectVideo={unselectVideo} selectClip={selectClip} video={video}/> : <StreamSelect apiClient={apiClient} selectVideo={selectVideo} channelId={channelId} setChannelId={setChannelId}/>}
+            {video ? <ClipTimeline apiClient={apiClient} unselectVideo={unselectVideo} selectClip={selectClip} video={video}/> : <StreamSelect apiClient={apiClient} channelId={channelId} setChannelId={setChannelId} selectVideo={selectVideo}/>}
           </ScrollArea>
         </AppShell.Navbar>
         <AppShell.Main>{(video && clip) ? <ClipPlayer clip={clip}/> : ''}</AppShell.Main>
@@ -89,3 +101,6 @@ export default function TwitchRecap() {
     </MantineProvider>
   );
 }
+
+//
+//AllClips apiClient={apiClient} />

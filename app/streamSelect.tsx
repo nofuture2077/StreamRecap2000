@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { Timeline, Text, Card, Space, Select } from '@mantine/core';
+import { Timeline, Text, Card, Space, Select, NavLink, Badge } from '@mantine/core';
 import { ApiClient, HelixVideo } from '@twurple/api';
 import { useEffect, useState } from 'react';
 
@@ -57,21 +57,16 @@ export default function StreamSelect(props: {apiClient: ApiClient, selectVideo: 
         onChange={(_value, option) => props.setChannelId(parseInt(option.value))}
       />
       <Space h="lg"/>
-      <Timeline bulletSize={24} lineWidth={2} align="left">
         {videos.map((video) => (
-          <Timeline.Item key={video.id} title={formatDate(video.creationDate)} c="dimmed">
-              <>
-                <Card key={video.id} padding="sm" component="a" href="#" onClick={() => {
-                  props.selectVideo(video);
-                }}>
-                <Text fw={600} size="m" c="cyan" lineClamp={1}>{video.title}</Text>
-                  <Text fw={50} size="s" c="orange" lineClamp={1}>{video.userDisplayName} - {formatSeconds(video.durationInSeconds)}</Text>
-                </Card>
-                <Space h="md" />
-              </>
-          </Timeline.Item>
+          <NavLink
+            href="#"
+            description={video.userDisplayName + " - " + formatSeconds(video.durationInSeconds)}
+            label={<Text lineClamp={2}>{video.title}</Text>}
+            onClick={() => {
+              props.selectVideo(video);
+            }}
+          />
         ))}
-      </Timeline>
     </>
   );
 }

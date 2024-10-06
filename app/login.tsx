@@ -12,7 +12,9 @@ export default function Login(props: {clientId: String}) {
         setRedirectUrl(encodeURI(url));
     }, []);
     var state = '';
-    let scope = encodeURIComponent(['clips:edit'].join('+'));
+    let scope = encodeURIComponent([
+        'user:read:follows'
+    ].join('+'));
     
     let responseType = encodeURIComponent('token');
     let authUrl = `https://id.twitch.tv/oauth2/authorize?response_type=${responseType}&client_id=${props.clientId}&redirect_uri=${redirectUrl}&scope=${scope}&state=${state}`;

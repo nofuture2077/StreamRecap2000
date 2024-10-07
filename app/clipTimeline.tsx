@@ -33,15 +33,14 @@ export default function ClipTimeline(props: {apiClient: ApiClient, video: HelixV
  
   useEffect(() => {
     var date = props.video.creationDate;
-    date.setHours(0, 0, 0, 0);
 
-    var startOfCurrentDay = date.toISOString();
-    date.setDate(date.getDate() + 1);
-    var startOfNextDay = date.toISOString();
+    var startDate = date.toISOString();
+    date.setTime(date.getTime() + (1000 * props.video.durationInSeconds));
+    var endDate = date.toISOString();
 
     props.apiClient.clips.getClipsForBroadcasterPaginated(props.video.userId, {
-        startDate: startOfCurrentDay,
-        endDate: startOfNextDay,
+        startDate,
+        endDate,
     }).getAll()
       .then((clips: HelixClip[]) => {
         setClips(clips)
